@@ -2,92 +2,106 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="売上管理">
+<meta name="apple-mobile-web-app-title" content="ONE BALANCE 売上">
+<meta name="theme-color" content="#DB444C">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>ONE BALANCE 売上管理</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23DB444C'/%3E%3Ctext x='90' y='80' font-size='52' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EONE%3C/text%3E%3Ctext x='90' y='135' font-size='42' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EBALANCE%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23DB444C'/%3E%3Ctext x='90' y='115' font-size='90' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3E¥%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{--red:#DB444C;--red-light:#fdecea;--blue:#5BB9CD;--blue-light:#e3f5fb;--bg:#f5f5f7;--card:#fff;--text:#1a1a1a;--text2:#666;--text3:#aaa;--border:#e8e8e8;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;}
-.page{display:none;padding-bottom:80px;}.page.active{display:block;}
-.header{background:var(--red);padding:52px 20px 28px;}
-.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.header-title{color:#fff;font-size:18px;font-weight:700;letter-spacing:0.08em;}
-.header-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:2px;}
-.header-actions{display:flex;gap:8px;align-items:center;}
-.year-pill{background:rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+:root{
+  --red:#DB444C;--red-light:#fdecea;--red-dark:#b8383f;
+  --blue:#5BB9CD;--blue-light:#e3f5fb;
+  --bg:#f5f5f7;--card:#fff;
+  --text:#1a1a1a;--text2:#666;--text3:#aaa;
+  --border:#e8e8e8;
+  --safe-top:env(safe-area-inset-top);
+  --safe-bottom:env(safe-area-inset-bottom);
+}
+html,body{touch-action:pan-x pan-y;overscroll-behavior:none;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:calc(80px + var(--safe-bottom));}
+.page{display:none;}.page.active{display:block;}
+.header{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);padding:calc(52px + var(--safe-top)) 20px 28px;}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:8px;}
+.header-title{color:#fff;font-size:18px;font-weight:900;letter-spacing:0.08em;}
+.header-sub{color:rgba(255,255,255,0.75);font-size:11px;margin-top:2px;font-weight:500;}
+.header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+.year-pill{background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 10px;display:flex;align-items:center;cursor:pointer;border:none;}
 .year-pill span{color:#fff;font-size:12px;font-weight:700;}
-.year-pill i{color:#fff;font-size:13px;}
-.refresh-btn{background:rgba(255,255,255,0.2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.year-pill i{color:#fff;font-size:14px;}
+.refresh-btn{background:rgba(255,255,255,0.2);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
 .refresh-btn i{color:#fff;font-size:16px;}
+.refresh-btn.spinning i{animation:spin 0.8s linear infinite;}
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-top:-16px;}
-.kpi-card{background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.kpi-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
 .kpi-label{font-size:10px;color:var(--text2);font-weight:500;margin-bottom:4px;letter-spacing:0.04em;}
-.kpi-value{font-size:16px;font-weight:700;color:var(--text);line-height:1.2;word-break:break-all;}
-.kpi-diff{font-size:10px;margin-top:4px;font-weight:700;}
+.kpi-value{font-size:18px;font-weight:900;color:var(--text);line-height:1.2;word-break:break-all;}
+.kpi-diff{font-size:10px;margin-top:5px;font-weight:700;}
 .kpi-diff.up{color:var(--red);}.kpi-diff.down{color:var(--blue);}.kpi-diff.neutral{color:var(--text3);}
 .kpi-card.profit .kpi-value{color:var(--red);}
-.section{padding:18px 14px 0;}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.section-title{font-size:13px;font-weight:700;color:var(--text);}
+.section{padding:20px 14px 0;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.section-title{font-size:14px;font-weight:700;color:var(--text);}
 .toggle-wrap{display:flex;background:#f0f0f0;border-radius:8px;padding:2px;}
-.toggle-btn{font-size:10px;padding:4px 10px;border-radius:6px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;transition:all 0.2s;}
+.toggle-btn{font-size:10px;padding:5px 11px;border-radius:6px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;transition:all 0.2s;}
 .toggle-btn.active{background:var(--red);color:#fff;}
-.chart-wrap{background:#f9f9f9;border-radius:14px;padding:14px 12px;}
-.bars{display:flex;align-items:flex-end;gap:4px;height:100px;}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.bar-body{width:100%;border-radius:4px 4px 0 0;transition:height 0.3s;}
-.bar-body.current{background:var(--red);}.bar-body.prev{background:var(--blue);opacity:0.5;}
-.bar-month{font-size:9px;color:var(--text3);font-weight:500;}.bar-month.now{color:var(--red);font-weight:700;}
-.chart-legend{display:flex;gap:12px;margin-top:10px;}
-.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
-.legend-text{font-size:10px;color:var(--text2);}
+.chart-wrap{background:#fff;border-radius:14px;padding:16px 14px;border:0.5px solid var(--border);}
+.bars{display:flex;align-items:flex-end;gap:5px;height:110px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.bar-body{width:100%;border-radius:4px 4px 0 0;transition:height 0.4s ease-out;min-height:2px;}
+.bar-body.current{background:var(--red);}.bar-body.prev{background:var(--blue);opacity:0.55;}
+.bar-month{font-size:9px;color:var(--text3);font-weight:600;}.bar-month.now{color:var(--red);font-weight:900;}
+.chart-legend{display:flex;gap:14px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border);}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
+.legend-text{font-size:10px;color:var(--text2);font-weight:500;}
 .breakdown-list{display:flex;flex-direction:column;gap:8px;}
-.breakdown-item{background:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:0.5px solid var(--border);}
-.breakdown-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.breakdown-item{background:#fff;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px;border:0.5px solid var(--border);}
+.breakdown-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .breakdown-icon.red{background:var(--red-light);}.breakdown-icon.blue{background:var(--blue-light);}.breakdown-icon.gray{background:#f0f0f0;}
-.breakdown-icon i{font-size:18px;}
+.breakdown-icon i{font-size:20px;}
 .breakdown-icon.red i{color:var(--red);}.breakdown-icon.blue i{color:var(--blue);}.breakdown-icon.gray i{color:var(--text3);}
 .breakdown-info{flex:1;min-width:0;}
-.breakdown-name{font-size:11px;color:var(--text2);margin-bottom:2px;}
-.breakdown-val{font-size:15px;font-weight:700;color:var(--text);}
-.breakdown-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
-.breakdown-badge.up{background:var(--red-light);color:var(--red);}.breakdown-badge.none{background:#f0f0f0;color:var(--text3);}
-.expense-list{display:flex;flex-direction:column;gap:6px;}
-.expense-item{background:#fff;border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border:0.5px solid var(--border);}
-.expense-name{font-size:12px;color:var(--text);font-weight:500;}
-.expense-val{font-size:14px;font-weight:700;color:var(--text);}
-.summary-box{background:var(--red);border-radius:16px;padding:18px 20px;margin:0 14px;}
-.summary-label{color:rgba(255,255,255,0.8);font-size:11px;font-weight:500;margin-bottom:6px;}
-.summary-value{color:#fff;font-size:28px;font-weight:700;}
-.summary-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:6px;}
-.summary-row{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.2);}
-.summary-col{text-align:center;}
-.summary-col-label{color:rgba(255,255,255,0.7);font-size:10px;margin-bottom:4px;}
-.summary-col-val{color:#fff;font-size:14px;font-weight:700;}
+.breakdown-name{font-size:11px;color:var(--text2);margin-bottom:3px;font-weight:500;}
+.breakdown-val{font-size:16px;font-weight:900;color:var(--text);}
+.breakdown-ratio{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.breakdown-ratio.has{background:var(--red-light);color:var(--red);}.breakdown-ratio.none{background:#f0f0f0;color:var(--text3);}
+.summary-box{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);border-radius:18px;padding:20px;margin:0 14px;box-shadow:0 4px 16px rgba(219,68,76,0.25);}
+.summary-label{color:rgba(255,255,255,0.85);font-size:11px;font-weight:500;margin-bottom:6px;}
+.summary-value{color:#fff;font-size:30px;font-weight:900;letter-spacing:-0.02em;}
+.summary-sub{color:rgba(255,255,255,0.8);font-size:11px;margin-top:6px;font-weight:500;}
+.summary-row{display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2);}
+.summary-col{text-align:center;flex:1;}
+.summary-col-label{color:rgba(255,255,255,0.75);font-size:10px;margin-bottom:5px;font-weight:500;}
+.summary-col-val{color:#fff;font-size:14px;font-weight:900;}
 .trend-table{background:#fff;border-radius:14px;overflow:hidden;border:0.5px solid var(--border);}
-.trend-row{display:flex;align-items:center;padding:11px 14px;border-bottom:0.5px solid var(--border);}
+.trend-row{display:flex;align-items:center;padding:12px 14px;border-bottom:0.5px solid var(--border);}
 .trend-row:last-child{border-bottom:none;}
 .trend-row.header{background:#f9f9f9;}
-.trend-month{font-size:12px;font-weight:700;color:var(--text);width:40px;flex-shrink:0;}
-.trend-sales,.trend-expense{flex:1;font-size:11px;color:var(--text);text-align:right;}
-.trend-profit{flex:1;font-size:11px;font-weight:700;text-align:right;}
+.trend-month{font-size:12px;font-weight:900;color:var(--text);width:40px;flex-shrink:0;}
+.trend-sales,.trend-expense{flex:1;font-size:11px;color:var(--text);text-align:right;font-weight:500;}
+.trend-profit{flex:1;font-size:11px;font-weight:900;text-align:right;}
 .trend-profit.pos{color:var(--red);}.trend-profit.neg{color:var(--blue);}
-.header-col{color:var(--text2);font-weight:500;font-size:10px;}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:0.5px solid var(--border);display:flex;padding:8px 0 20px;z-index:100;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;}
+.header-col{color:var(--text2);font-weight:600;font-size:10px;}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:0.5px solid var(--border);display:flex;padding:8px 0 calc(8px + var(--safe-bottom));z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;padding:6px 0;}
 .nav-item i{font-size:22px;color:var(--text3);}.nav-item.active i{color:var(--red);}
 .nav-label{font-size:9px;color:var(--text3);font-weight:700;}.nav-item.active .nav-label{color:var(--red);}
-.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;}
-.loading-spinner{width:36px;height:36px;border:3px solid var(--red-light);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
-.loading-text{font-size:13px;color:var(--text2);font-weight:500;}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;}
+.loading-spinner{width:38px;height:38px;border:3px solid var(--red-light);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
+.loading-text{font-size:13px;color:var(--text2);font-weight:600;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:200;}
+.toast{position:fixed;bottom:calc(90px + var(--safe-bottom));left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:24px;font-size:12px;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
 .toast.show{opacity:1;}
+.empty-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:12px;}
+.update-time{font-size:10px;color:var(--text3);text-align:center;margin-top:8px;padding-bottom:4px;}
 </style>
 </head>
 <body>
@@ -105,10 +119,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         <div class="header-sub">売上ダッシュボード</div>
       </div>
       <div class="header-actions">
-        <div class="year-pill" onclick="changeYear(-1)"><i class="ti ti-chevron-left"></i></div>
-        <div class="year-pill" style="padding:5px 14px;"><span id="year-label">2026年</span></div>
-        <div class="year-pill" onclick="changeYear(1)"><i class="ti ti-chevron-right"></i></div>
-        <button class="refresh-btn" onclick="loadData()"><i class="ti ti-refresh"></i></button>
+        <button class="year-pill" onclick="changeYear(-1)"><i class="ti ti-chevron-left"></i></button>
+        <div class="year-pill" style="padding:6px 12px;"><span id="year-label">2026年</span></div>
+        <button class="year-pill" onclick="changeYear(1)"><i class="ti ti-chevron-right"></i></button>
+        <button class="refresh-btn" id="refresh-btn" onclick="loadData(true)"><i class="ti ti-refresh"></i></button>
       </div>
     </div>
   </div>
@@ -134,12 +148,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
       <div class="kpi-diff neutral" id="kpi-profit-rate">—</div>
     </div>
   </div>
-  <div class="section" style="margin-top:20px;">
+  <div class="section" style="margin-top:22px;">
     <div class="section-header">
       <div class="section-title">月別売上グラフ</div>
       <div class="toggle-wrap">
-        <button class="toggle-btn active" onclick="switchChart('current')">今年</button>
-        <button class="toggle-btn" id="toggle-compare" onclick="switchChart('compare')">前年比</button>
+        <button class="toggle-btn active" id="toggle-current" onclick="switchChart('current',this)">今年</button>
+        <button class="toggle-btn" id="toggle-compare" onclick="switchChart('compare',this)">前年比</button>
       </div>
     </div>
     <div class="chart-wrap">
@@ -147,9 +161,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
       <div class="chart-legend" id="chart-legend"></div>
     </div>
   </div>
-  <div class="section" style="margin-top:16px;padding-bottom:16px;">
+  <div class="section" style="margin-top:18px;padding-bottom:16px;">
     <div class="section-header"><div class="section-title">売上内訳（今月）</div></div>
     <div class="breakdown-list" id="breakdown-list"></div>
+    <div class="update-time" id="update-time"></div>
   </div>
 </div>
 
@@ -157,14 +172,34 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="header">
     <div class="header-top">
       <div>
-        <div class="header-title">経費明細</div>
+        <div class="header-title">経費</div>
         <div class="header-sub" id="expense-sub">—</div>
+      </div>
+      <div class="header-actions">
+        <button class="refresh-btn" onclick="loadData(true)"><i class="ti ti-refresh"></i></button>
       </div>
     </div>
   </div>
-  <div class="section" style="margin-top:14px;">
-    <div class="section-title" style="margin-bottom:10px;">今月の経費内訳</div>
-    <div class="expense-list" id="expense-list"></div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">今月の経費</div>
+      <div class="kpi-value" id="exp-month">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">年間経費</div>
+      <div class="kpi-value" id="exp-year">—</div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:22px;padding-bottom:16px;">
+    <div class="section-title" style="margin-bottom:12px;">月別経費推移</div>
+    <div class="trend-table">
+      <div class="trend-row header">
+        <div class="trend-month header-col">月</div>
+        <div class="trend-sales header-col" style="text-align:right;">経費</div>
+        <div class="trend-profit header-col">前月比</div>
+      </div>
+      <div id="exp-rows"></div>
+    </div>
   </div>
 </div>
 
@@ -174,6 +209,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
       <div>
         <div class="header-title">年間推移</div>
         <div class="header-sub" id="trend-sub">—</div>
+      </div>
+      <div class="header-actions">
+        <button class="refresh-btn" onclick="loadData(true)"><i class="ti ti-refresh"></i></button>
       </div>
     </div>
   </div>
@@ -189,8 +227,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
       </div>
     </div>
   </div>
-  <div class="section" style="margin-top:16px;padding-bottom:16px;">
-    <div class="section-title" style="margin-bottom:10px;">月別損益一覧</div>
+  <div class="section" style="margin-top:18px;padding-bottom:16px;">
+    <div class="section-title" style="margin-bottom:12px;">月別損益一覧</div>
     <div class="trend-table">
       <div class="trend-row header">
         <div class="trend-month header-col">月</div>
@@ -216,25 +254,28 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </nav>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+// ============================================
+// ONE BALANCE 売上管理アプリ
+// GAS: 売上経費管理表
+// ============================================
+const GAS_URL='https://script.google.com/macros/s/AKfycbyDepduBJ5qNk4Ay9amEW1aq2dx1JdNC91ZeSZJojLtYE0FyAMSBDhFrY8-vHf2zjax/exec';
+
 let currentYear=new Date().getFullYear();
 let currentMonth=new Date().getMonth()+1;
 let chartMode='current';
-let salesData={};
-let expenseData={};
-let prevSalesData={};
-
-const EXPENSE_ITEMS=['家賃','人件費','光熱費','通信費','広告費','雑費','パーソナル人件費','駐車場','YouTube'];
+let salesData={},expensesData={},profitsData={};
+let boxingData={},personalData={},salonData={};
+let prevSalesData={},prevExpensesData={};
 
 function fmt(n){
-  if(n===null||n===undefined)return'—';
+  if(n===null||n===undefined||isNaN(n))return'¥0';
   return'¥'+Math.round(n).toLocaleString('ja-JP');
 }
 
 function showToast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2000);
+  setTimeout(()=>el.classList.remove('show'),2200);
 }
 
 function showPage(name,btn){
@@ -242,51 +283,77 @@ function showPage(name,btn){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
+  window.scrollTo(0,0);
 }
 
 function changeYear(d){
   const ny=currentYear+d;
   if(ny>new Date().getFullYear())return;
+  if(ny<2024)return;
   currentYear=ny;
   document.getElementById('year-label').textContent=currentYear+'年';
   loadData();
 }
 
-async function loadData(){
-  document.getElementById('loading').style.display='flex';
-  try{
-    const [r1,r2]=await Promise.all([
-      fetch(GAS_URL+'?action=getMonthlyRepaymentData&year='+currentYear+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'}),
-      fetch(GAS_URL+'?action=getMonthlyRepaymentData&year='+(currentYear-1)+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'})
-    ]);
-    const j1=await r1.json();
-    const j2=await r2.json();
-    if(j1&&j1.ok)salesData=j1.monthly||{};
-    if(j2&&j2.ok)prevSalesData=j2.monthly||{};
+async function fetchJSON(url){
+  const res=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',redirect:'follow'});
+  return await res.json();
+}
 
-    await loadExpenseData();
+async function loadData(showRefreshIcon){
+  document.getElementById('loading').style.display='flex';
+  if(showRefreshIcon)document.getElementById('refresh-btn').classList.add('spinning');
+  try{
+    const t=Date.now();
+    const [j1,j2]=await Promise.all([
+      fetchJSON(GAS_URL+'?action=getMonthlyDashboardData&year='+currentYear+'&t='+t),
+      fetchJSON(GAS_URL+'?action=getMonthlyDashboardData&year='+(currentYear-1)+'&t='+t)
+    ]);
+    if(j1&&j1.success){
+      salesData=j1.sales||{};
+      expensesData=j1.expenses||{};
+      profitsData=j1.profits||{};
+      boxingData=j1.boxing||{};
+      personalData=j1.personal||{};
+      salonData=j1.salon||{};
+    }else{
+      salesData={};expensesData={};profitsData={};
+      boxingData={};personalData={};salonData={};
+    }
+    if(j2&&j2.success){
+      prevSalesData=j2.sales||{};
+      prevExpensesData=j2.expenses||{};
+    }else{
+      prevSalesData={};prevExpensesData={};
+    }
     renderAll();
+    if(showRefreshIcon)showToast('データを更新しました');
   }catch(e){
     showToast('データ取得に失敗しました');
-    renderAll();
+    console.error(e);
   }finally{
     document.getElementById('loading').style.display='none';
+    document.getElementById('refresh-btn').classList.remove('spinning');
   }
 }
 
-async function loadExpenseData(){
-  expenseData={1:8000,2:8000,3:4000,4:328000,5:324000,6:333000,7:285000,8:285000,9:285000,10:285000,11:285000,12:285000};
+function renderAll(){
+  renderKPI();renderChart();renderBreakdown();renderExpense();renderTrend();renderUpdateTime();
 }
 
-function renderAll(){
-  renderKPI();renderChart();renderBreakdown();renderExpense();renderTrend();
+function renderUpdateTime(){
+  const now=new Date();
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('update-time').textContent='最終更新：'+(now.getMonth()+1)+'/'+now.getDate()+' '+hh+':'+mm;
 }
 
 function renderKPI(){
   const ms=salesData[currentMonth]||0;
   const pms=salesData[currentMonth-1]||0;
-  const me=expenseData[currentMonth]||0;
-  const mp=ms-me;
+  const me=expensesData[currentMonth]||0;
+  const pme=expensesData[currentMonth-1]||0;
+  const mp=profitsData[currentMonth]||(ms-me);
   const pr=ms>0?Math.round(mp/ms*100):0;
   let ys=0,pys=0;
   for(let m=1;m<=12;m++){ys+=salesData[m]||0;pys+=prevSalesData[m]||0;}
@@ -299,22 +366,28 @@ function renderKPI(){
   const md=pms>0?Math.round((ms-pms)/pms*100):null;
   const mel=document.getElementById('kpi-month-diff');
   if(md!==null){mel.textContent=(md>=0?'▲':'▼')+' 前月比 '+(md>=0?'+':'')+md+'%';mel.className='kpi-diff '+(md>=0?'up':'down');}
-  else{mel.textContent='—';mel.className='kpi-diff neutral';}
+  else{mel.textContent='前月データなし';mel.className='kpi-diff neutral';}
 
   const yd=pys>0?Math.round((ys-pys)/pys*100):null;
   const yel=document.getElementById('kpi-year-diff');
   if(yd!==null){yel.textContent=(yd>=0?'▲':'▼')+' 前年比 '+(yd>=0?'+':'')+yd+'%';yel.className='kpi-diff '+(yd>=0?'up':'down');}
   else{yel.textContent='前年データなし';yel.className='kpi-diff neutral';}
 
-  document.getElementById('kpi-profit-rate').textContent='利益率 '+pr+'%';
-  document.getElementById('kpi-profit-rate').className='kpi-diff '+(mp>=0?'up':'down');
+  const ed=pme>0?Math.round((me-pme)/pme*100):null;
+  const eel=document.getElementById('kpi-expense-diff');
+  if(ed!==null){eel.textContent=(ed>=0?'▲':'▼')+' 前月比 '+(ed>=0?'+':'')+ed+'%';eel.className='kpi-diff '+(ed>=0?'down':'up');}
+  else{eel.textContent='—';eel.className='kpi-diff neutral';}
+
+  const prEl=document.getElementById('kpi-profit-rate');
+  prEl.textContent='利益率 '+pr+'%';
+  prEl.className='kpi-diff '+(mp>=0?'up':'down');
 }
 
 function renderChart(){
   const vals=Object.values(salesData);
   const pvals=Object.values(prevSalesData);
   const maxV=Math.max(...vals,...(chartMode==='compare'?pvals:[]),1);
-  const MAX_H=90;
+  const MAX_H=100;
   let html='';
   for(let m=1;m<=12;m++){
     const v=salesData[m]||0;
@@ -324,63 +397,85 @@ function renderChart(){
     if(chartMode==='compare'){
       const pv=prevSalesData[m]||0;
       const ph=Math.round((pv/maxV)*MAX_H);
-      html+='<div style="display:flex;align-items:flex-end;gap:2px;height:'+MAX_H+'px;">';
+      html+='<div style="display:flex;align-items:flex-end;gap:2px;height:'+MAX_H+'px;width:100%;">';
       html+='<div class="bar-body current" style="height:'+h+'px;flex:1"></div>';
       html+='<div class="bar-body prev" style="height:'+ph+'px;flex:1"></div>';
       html+='</div>';
     }else{
-      html+='<div class="bar-body current" style="height:'+h+'px;'+(isNow?'outline:2px solid var(--red);outline-offset:1px;':'')+'"></div>';
+      html+='<div style="display:flex;align-items:flex-end;height:'+MAX_H+'px;width:100%;">';
+      html+='<div class="bar-body current" style="height:'+h+'px;width:100%;'+(isNow?'outline:2px solid var(--red);outline-offset:1px;':'')+'"></div>';
+      html+='</div>';
     }
     html+='<div class="bar-month'+(isNow?' now':'')+'">'+m+'</div></div>';
   }
   document.getElementById('chart-bars').innerHTML=html;
   const leg=document.getElementById('chart-legend');
   leg.innerHTML='<span><span class="legend-dot" style="background:var(--red)"></span><span class="legend-text">'+currentYear+'年</span></span>'+
-    (chartMode==='compare'?'<span><span class="legend-dot" style="background:var(--blue);opacity:0.5"></span><span class="legend-text">'+(currentYear-1)+'年</span></span>':'');
+    (chartMode==='compare'?'<span><span class="legend-dot" style="background:var(--blue);opacity:0.55"></span><span class="legend-text">'+(currentYear-1)+'年</span></span>':'');
 }
 
-function switchChart(mode){
+function switchChart(mode,btn){
   chartMode=mode;
   document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   renderChart();
 }
 
 function renderBreakdown(){
   const ms=salesData[currentMonth]||0;
+  const b=boxingData[currentMonth]||0;
+  const p=personalData[currentMonth]||0;
+  const s=salonData[currentMonth]||0;
   const items=[
-    {name:'ボクシング月会費',icon:'ti-trophy',cls:'red',val:Math.round(ms*0.86)},
-    {name:'パーソナル都度',icon:'ti-run',cls:'blue',val:Math.round(ms*0.14)},
-    {name:'オンラインサロン',icon:'ti-world',cls:'gray',val:0},
+    {name:'ボクシング月会費',icon:'ti-trophy',cls:'red',val:b},
+    {name:'パーソナル都度',icon:'ti-run',cls:'blue',val:p},
+    {name:'オンラインサロン',icon:'ti-world',cls:'gray',val:s},
   ];
-  document.getElementById('breakdown-list').innerHTML=items.map(it=>`
+  document.getElementById('breakdown-list').innerHTML=items.map(it=>{
+    const ratio=ms>0?Math.round(it.val/ms*100):0;
+    return `
     <div class="breakdown-item">
       <div class="breakdown-icon ${it.cls}"><i class="ti ${it.icon}"></i></div>
       <div class="breakdown-info">
         <div class="breakdown-name">${it.name}</div>
         <div class="breakdown-val">${fmt(it.val)}</div>
       </div>
-      <div class="breakdown-badge ${it.val>0?'up':'none'}">${it.val>0?'▲ データあり':'— データなし'}</div>
-    </div>`).join('');
+      <div class="breakdown-ratio ${it.val>0?'has':'none'}">${it.val>0?ratio+'%':'—'}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderExpense(){
-  document.getElementById('expense-sub').textContent=currentYear+'年 '+currentMonth+'月';
-  const items=[
-    {name:'家賃',val:75000},{name:'人件費（稲田）',val:150000},
-    {name:'光熱費',val:30000},{name:'通信費',val:5000},
-    {name:'パーソナル人件費',val:14000},{name:'駐車場',val:20000},{name:'YouTube',val:30000},
-  ];
-  document.getElementById('expense-list').innerHTML=items.map(it=>`
-    <div class="expense-item">
-      <span class="expense-name">${it.name}</span>
-      <span class="expense-val">${fmt(it.val)}</span>
-    </div>`).join('');
+  document.getElementById('expense-sub').textContent=currentYear+'年';
+  const me=expensesData[currentMonth]||0;
+  let ye=0;
+  for(let m=1;m<=12;m++)ye+=expensesData[m]||0;
+  document.getElementById('exp-month').textContent=fmt(me);
+  document.getElementById('exp-year').textContent=fmt(ye);
+
+  let html='';
+  for(let m=1;m<=12;m++){
+    const e=expensesData[m]||0;
+    const pe=expensesData[m-1]||0;
+    const diff=pe>0?Math.round((e-pe)/pe*100):null;
+    const isNow=m===currentMonth&&currentYear===new Date().getFullYear();
+    let diffHtml='—';let diffCls='';
+    if(e>0&&diff!==null){
+      diffHtml=(diff>=0?'▲ +':'▼ ')+diff+'%';
+      diffCls=diff>=0?'neg':'pos';
+    }
+    html+=`<div class="trend-row" style="${isNow?'background:#fdf5f5;':''}">
+      <div class="trend-month" style="${isNow?'color:var(--red);':''}">${m}月</div>
+      <div class="trend-sales">${e>0?fmt(e):'—'}</div>
+      <div class="trend-profit ${diffCls}">${diffHtml}</div>
+    </div>`;
+  }
+  document.getElementById('exp-rows').innerHTML=html;
 }
 
 function renderTrend(){
   let ts=0,te=0;
-  for(let m=1;m<=12;m++){ts+=salesData[m]||0;te+=expenseData[m]||0;}
+  for(let m=1;m<=12;m++){ts+=salesData[m]||0;te+=expensesData[m]||0;}
   const tp=ts-te;
   const pr=ts>0?Math.round(tp/ts*100):0;
   document.getElementById('trend-sub').textContent=currentYear+'年';
@@ -393,8 +488,8 @@ function renderTrend(){
   let html='';
   for(let m=1;m<=12;m++){
     const s=salesData[m]||0;
-    const e=expenseData[m]||0;
-    const p=s-e;
+    const e=expensesData[m]||0;
+    const p=profitsData[m]||(s-e);
     const isNow=m===currentMonth&&currentYear===new Date().getFullYear();
     html+=`<div class="trend-row" style="${isNow?'background:#fdf5f5;':''}">
       <div class="trend-month" style="${isNow?'color:var(--red);':''}">${m}月</div>
@@ -406,6 +501,20 @@ function renderTrend(){
   document.getElementById('trend-rows').innerHTML=html;
 }
 
+// キャッシュ消去（PWA対策）
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
+}
+if('caches' in window){
+  caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
+}
+
+// ズーム時のレイアウト崩れ防止
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+
+// 初期化
+document.getElementById('year-label').textContent=currentYear+'年';
 loadData();
 </script>
 </body>
