@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)file:///Users/nagao/Downloads/onebalance_sales_1.html -->
-<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="売上管理">
 <title>ONE BALANCE 売上管理</title>
-<link href="./ONE BALANCE 売上管理_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -136,7 +136,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </head>
 <body>
 
-<div class="loading-overlay" id="loading" style="display: none;">
+<div class="loading-overlay" id="loading">
   <div class="loading-spinner"></div>
   <div class="loading-text">データを取得中...</div>
 </div>
@@ -170,23 +170,23 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="kpi-grid" id="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">今月の売上</div>
-      <div class="kpi-value" id="kpi-month-sales">¥115,680</div>
-      <div class="kpi-diff up" id="kpi-month-diff">▲ 前月比 +217%</div>
+      <div class="kpi-value" id="kpi-month-sales">—</div>
+      <div class="kpi-diff" id="kpi-month-diff">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">年間売上</div>
-      <div class="kpi-value" id="kpi-year-sales">¥282,720</div>
-      <div class="kpi-diff up" id="kpi-year-diff">▲ 前年比 +173%</div>
+      <div class="kpi-value" id="kpi-year-sales">—</div>
+      <div class="kpi-diff" id="kpi-year-diff">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">今月の経費</div>
-      <div class="kpi-value" id="kpi-month-expense">¥0</div>
+      <div class="kpi-value" id="kpi-month-expense">—</div>
       <div class="kpi-diff neutral" id="kpi-expense-diff">—</div>
     </div>
     <div class="kpi-card profit">
       <div class="kpi-label">今月の損益</div>
-      <div class="kpi-value" id="kpi-month-profit">¥115,680</div>
-      <div class="kpi-diff up" id="kpi-profit-rate">利益率 100%</div>
+      <div class="kpi-value" id="kpi-month-profit">—</div>
+      <div class="kpi-diff" id="kpi-profit-rate">—</div>
     </div>
   </div>
 
@@ -194,13 +194,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
     <div class="section-header">
       <div class="section-title">月別売上グラフ</div>
       <div class="toggle-wrap">
-        <button class="toggle-btn active" id="toggle-current" onclick="switchChart(&#39;current&#39;)">今年</button>
-        <button class="toggle-btn" id="toggle-compare" onclick="switchChart(&#39;compare&#39;)">前年比</button>
+        <button class="toggle-btn active" id="toggle-current" onclick="switchChart('current')">今年</button>
+        <button class="toggle-btn" id="toggle-compare" onclick="switchChart('compare')">前年比</button>
       </div>
     </div>
     <div class="chart-wrap">
-      <div class="bars" id="chart-bars"><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">1</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">2</div></div><div class="bar-col"><div class="bar-body current" style="height:90px;"></div><div class="bar-month">3</div></div><div class="bar-col"><div class="bar-body current" style="height:25px;"></div><div class="bar-month">4</div></div><div class="bar-col"><div class="bar-body current" style="height:80px;outline:2px solid var(--red);outline-offset:1px;"></div><div class="bar-month now">5</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">6</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">7</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">8</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">9</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">10</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">11</div></div><div class="bar-col"><div class="bar-body current" style="height:0px;"></div><div class="bar-month">12</div></div></div>
-      <div class="chart-legend" id="chart-legend"><span><span class="legend-dot" style="background:var(--red)"></span><span class="legend-text">2026年</span></span></div>
+      <div class="bars" id="chart-bars"></div>
+      <div class="chart-legend" id="chart-legend">
+        <span><span class="legend-dot" style="background:var(--red)"></span><span class="legend-text" id="legend-year">2026年</span></span>
+      </div>
     </div>
   </div>
 
@@ -208,7 +210,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
     <div class="section-header">
       <div class="section-title">売上内訳（今月）</div>
     </div>
-    <div class="breakdown-list" id="breakdown-list"><div class="breakdown-item"><div class="breakdown-icon red"><i class="ti ti-trophy"></i></div><div class="breakdown-info"><div class="breakdown-name">ボクシング月会費</div><div class="breakdown-val">¥99,485</div></div><div class="breakdown-badge up">▲ +5%</div></div><div class="breakdown-item"><div class="breakdown-icon blue"><i class="ti ti-run"></i></div><div class="breakdown-info"><div class="breakdown-name">パーソナル都度</div><div class="breakdown-val">¥16,195</div></div><div class="breakdown-badge up">▲ +5%</div></div><div class="breakdown-item"><div class="breakdown-icon gray"><i class="ti ti-world"></i></div><div class="breakdown-info"><div class="breakdown-name">オンラインサロン</div><div class="breakdown-val">¥0</div></div><div class="breakdown-badge up">▲ +5%</div></div></div>
+    <div class="breakdown-list" id="breakdown-list">
+      <div class="empty-state"><i class="ti ti-chart-bar"></i><p>データなし</p></div>
+    </div>
   </div>
 </div>
 
@@ -217,13 +221,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
     <div class="header-top">
       <div>
         <div class="header-title">経費明細</div>
-        <div class="header-sub" id="expense-header-sub">2026年 5月</div>
+        <div class="header-sub" id="expense-header-sub">2026年</div>
       </div>
     </div>
   </div>
   <div class="section" style="margin-top:14px;">
     <div class="section-title" style="margin-bottom:10px;">今月の経費内訳</div>
-    <div class="expense-list" id="expense-list"><div class="expense-item"><span class="expense-name">家賃</span><span class="expense-val">¥75,000</span></div><div class="expense-item"><span class="expense-name">人件費（稲田）</span><span class="expense-val">¥150,000</span></div><div class="expense-item"><span class="expense-name">光熱費</span><span class="expense-val">¥30,000</span></div><div class="expense-item"><span class="expense-name">通信費</span><span class="expense-val">¥5,000</span></div><div class="expense-item"><span class="expense-name">パーソナル人件費</span><span class="expense-val">¥14,000</span></div><div class="expense-item"><span class="expense-name">駐車場</span><span class="expense-val">¥20,000</span></div><div class="expense-item"><span class="expense-name">YouTube</span><span class="expense-val">¥30,000</span></div></div>
+    <div class="expense-list" id="expense-list">
+      <div class="empty-state"><i class="ti ti-receipt"></i><p>データなし</p></div>
+    </div>
   </div>
 </div>
 
@@ -239,20 +245,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="section" style="margin-top:14px;">
     <div class="summary-box" id="summary-box">
       <div class="summary-label">年間損益</div>
-      <div class="summary-value" id="summary-profit">¥282,720</div>
-      <div class="summary-sub" id="summary-sub">利益率 100%</div>
+      <div class="summary-value" id="summary-profit">—</div>
+      <div class="summary-sub" id="summary-sub">—</div>
       <div class="summary-row">
         <div class="summary-col">
           <div class="summary-col-label">年間売上</div>
-          <div class="summary-col-val" id="summary-sales">¥282,720</div>
+          <div class="summary-col-val" id="summary-sales">—</div>
         </div>
         <div class="summary-col">
           <div class="summary-col-label">年間経費</div>
-          <div class="summary-col-val" id="summary-expense">¥0</div>
+          <div class="summary-col-val" id="summary-expense">—</div>
         </div>
         <div class="summary-col">
           <div class="summary-col-label">利益率</div>
-          <div class="summary-col-val" id="summary-rate">100%</div>
+          <div class="summary-col-val" id="summary-rate">—</div>
         </div>
       </div>
     </div>
@@ -266,27 +272,27 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         <div class="trend-expense header">経費</div>
         <div class="trend-profit header">損益</div>
       </div>
-      <div id="trend-rows"><div class="trend-row" style=""><div class="trend-month" style="">1月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">2月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">3月</div><div class="trend-sales">¥130,560</div><div class="trend-expense">—</div><div class="trend-profit pos">¥130,560</div></div><div class="trend-row" style=""><div class="trend-month" style="">4月</div><div class="trend-sales">¥36,480</div><div class="trend-expense">—</div><div class="trend-profit pos">¥36,480</div></div><div class="trend-row" style="background:#fdf5f5;"><div class="trend-month now" style="color:var(--red);">5月</div><div class="trend-sales">¥115,680</div><div class="trend-expense">—</div><div class="trend-profit pos">¥115,680</div></div><div class="trend-row" style=""><div class="trend-month" style="">6月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">7月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">8月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">9月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">10月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">11月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div><div class="trend-row" style=""><div class="trend-month" style="">12月</div><div class="trend-sales">—</div><div class="trend-expense">—</div><div class="trend-profit ">—</div></div></div>
+      <div id="trend-rows"></div>
     </div>
   </div>
 </div>
 
 <nav class="bottom-nav">
-  <button class="nav-item active" onclick="showPage(&#39;sales&#39;,this)">
+  <button class="nav-item active" onclick="showPage('sales',this)">
     <i class="ti ti-chart-bar"></i>
     <span class="nav-label">売上</span>
   </button>
-  <button class="nav-item" onclick="showPage(&#39;expense&#39;,this)">
+  <button class="nav-item" onclick="showPage('expense',this)">
     <i class="ti ti-receipt"></i>
     <span class="nav-label">経費</span>
   </button>
-  <button class="nav-item" onclick="showPage(&#39;trend&#39;,this)">
+  <button class="nav-item" onclick="showPage('trend',this)">
     <i class="ti ti-trending-up"></i>
     <span class="nav-label">推移</span>
   </button>
 </nav>
 
-<link rel="stylesheet" href="./ONE BALANCE 売上管理_files/tabler-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 const SALES_SS_URL = 'https://script.google.com/macros/s/AKfycbwMJxo-YOUR-SALES-GAS-URL/exec';
@@ -534,6 +540,5 @@ function renderTrend() {
 
 loadData();
 </script>
-
-
-</body></html>
+</body>
+</html>
