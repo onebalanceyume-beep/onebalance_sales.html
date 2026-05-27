@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="売上管理">
+<title>ONE BALANCE 売上管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{--red:#DB444C;--red-light:#fdecea;--blue:#5BB9CD;--blue-light:#e3f5fb;--bg:#f5f5f7;--card:#fff;--text:#1a1a1a;--text2:#666;--text3:#aaa;--border:#e8e8e8;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;}
+.page{display:none;padding-bottom:80px;}.page.active{display:block;}
+.header{background:var(--red);padding:52px 20px 28px;}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.header-title{color:#fff;font-size:18px;font-weight:700;letter-spacing:0.08em;}
+.header-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:2px;}
+.header-actions{display:flex;gap:8px;align-items:center;}
+.year-pill{background:rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.year-pill span{color:#fff;font-size:12px;font-weight:700;}
+.year-pill i{color:#fff;font-size:13px;}
+.refresh-btn{background:rgba(255,255,255,0.2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.refresh-btn i{color:#fff;font-size:16px;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-top:-16px;}
+.kpi-card{background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.kpi-label{font-size:10px;color:var(--text2);font-weight:500;margin-bottom:4px;letter-spacing:0.04em;}
+.kpi-value{font-size:16px;font-weight:700;color:var(--text);line-height:1.2;word-break:break-all;}
+.kpi-diff{font-size:10px;margin-top:4px;font-weight:700;}
+.kpi-diff.up{color:var(--red);}.kpi-diff.down{color:var(--blue);}.kpi-diff.neutral{color:var(--text3);}
+.kpi-card.profit .kpi-value{color:var(--red);}
+.section{padding:18px 14px 0;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.section-title{font-size:13px;font-weight:700;color:var(--text);}
+.toggle-wrap{display:flex;background:#f0f0f0;border-radius:8px;padding:2px;}
+.toggle-btn{font-size:10px;padding:4px 10px;border-radius:6px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;transition:all 0.2s;}
+.toggle-btn.active{background:var(--red);color:#fff;}
+.chart-wrap{background:#f9f9f9;border-radius:14px;padding:14px 12px;}
+.bars{display:flex;align-items:flex-end;gap:4px;height:100px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar-body{width:100%;border-radius:4px 4px 0 0;transition:height 0.3s;}
+.bar-body.current{background:var(--red);}.bar-body.prev{background:var(--blue);opacity:0.5;}
+.bar-month{font-size:9px;color:var(--text3);font-weight:500;}.bar-month.now{color:var(--red);font-weight:700;}
+.chart-legend{display:flex;gap:12px;margin-top:10px;}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+.legend-text{font-size:10px;color:var(--text2);}
+.breakdown-list{display:flex;flex-direction:column;gap:8px;}
+.breakdown-item{background:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:0.5px solid var(--border);}
+.breakdown-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.breakdown-icon.red{background:var(--red-light);}.breakdown-icon.blue{background:var(--blue-light);}.breakdown-icon.gray{background:#f0f0f0;}
+.breakdown-icon i{font-size:18px;}
+.breakdown-icon.red i{color:var(--red);}.breakdown-icon.blue i{color:var(--blue);}.breakdown-icon.gray i{color:var(--text3);}
+.breakdown-info{flex:1;min-width:0;}
+.breakdown-name{font-size:11px;color:var(--text2);margin-bottom:2px;}
+.breakdown-val{font-size:15px;font-weight:700;color:var(--text);}
+.breakdown-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.breakdown-badge.up{background:var(--red-light);color:var(--red);}.breakdown-badge.none{background:#f0f0f0;color:var(--text3);}
+.expense-list{display:flex;flex-direction:column;gap:6px;}
+.expense-item{background:#fff;border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border:0.5px solid var(--border);}
+.expense-name{font-size:12px;color:var(--text);font-weight:500;}
+.expense-val{font-size:14px;font-weight:700;color:var(--text);}
+.summary-box{background:var(--red);border-radius:16px;padding:18px 20px;margin:0 14px;}
+.summary-label{color:rgba(255,255,255,0.8);font-size:11px;font-weight:500;margin-bottom:6px;}
+.summary-value{color:#fff;font-size:28px;font-weight:700;}
+.summary-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:6px;}
+.summary-row{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.2);}
+.summary-col{text-align:center;}
+.summary-col-label{color:rgba(255,255,255,0.7);font-size:10px;margin-bottom:4px;}
+.summary-col-val{color:#fff;font-size:14px;font-weight:700;}
+.trend-table{background:#fff;border-radius:14px;overflow:hidden;border:0.5px solid var(--border);}
+.trend-row{display:flex;align-items:center;padding:11px 14px;border-bottom:0.5px solid var(--border);}
+.trend-row:last-child{border-bottom:none;}
+.trend-row.header{background:#f9f9f9;}
+.trend-month{font-size:12px;font-weight:700;color:var(--text);width:40px;flex-shrink:0;}
+.trend-sales,.trend-expense{flex:1;font-size:11px;color:var(--text);text-align:right;}
+.trend-profit{flex:1;font-size:11px;font-weight:700;text-align:right;}
+.trend-profit.pos{color:var(--red);}.trend-profit.neg{color:var(--blue);}
+.header-col{color:var(--text2);font-weight:500;font-size:10px;}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:0.5px solid var(--border);display:flex;padding:8px 0 20px;z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;}
+.nav-item i{font-size:22px;color:var(--text3);}.nav-item.active i{color:var(--red);}
+.nav-label{font-size:9px;color:var(--text3);font-weight:700;}.nav-item.active .nav-label{color:var(--red);}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--red-light);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
+.loading-text{font-size:13px;color:var(--text2);font-weight:500;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:200;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">データを取得中...</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<div id="page-sales" class="page active">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">ONE BALANCE</div>
+        <div class="header-sub">売上ダッシュボード</div>
+      </div>
+      <div class="header-actions">
+        <div class="year-pill" onclick="changeYear(-1)"><i class="ti ti-chevron-left"></i></div>
+        <div class="year-pill" style="padding:5px 14px;"><span id="year-label">2026年</span></div>
+        <div class="year-pill" onclick="changeYear(1)"><i class="ti ti-chevron-right"></i></div>
+        <button class="refresh-btn" onclick="loadData()"><i class="ti ti-refresh"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">今月の売上</div>
+      <div class="kpi-value" id="kpi-month-sales">—</div>
+      <div class="kpi-diff neutral" id="kpi-month-diff">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">年間売上</div>
+      <div class="kpi-value" id="kpi-year-sales">—</div>
+      <div class="kpi-diff neutral" id="kpi-year-diff">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">今月の経費</div>
+      <div class="kpi-value" id="kpi-month-expense">—</div>
+      <div class="kpi-diff neutral" id="kpi-expense-diff">—</div>
+    </div>
+    <div class="kpi-card profit">
+      <div class="kpi-label">今月の損益</div>
+      <div class="kpi-value" id="kpi-month-profit">—</div>
+      <div class="kpi-diff neutral" id="kpi-profit-rate">—</div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:20px;">
+    <div class="section-header">
+      <div class="section-title">月別売上グラフ</div>
+      <div class="toggle-wrap">
+        <button class="toggle-btn active" onclick="switchChart('current')">今年</button>
+        <button class="toggle-btn" id="toggle-compare" onclick="switchChart('compare')">前年比</button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="bars" id="chart-bars"></div>
+      <div class="chart-legend" id="chart-legend"></div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:16px;padding-bottom:16px;">
+    <div class="section-header"><div class="section-title">売上内訳（今月）</div></div>
+    <div class="breakdown-list" id="breakdown-list"></div>
+  </div>
+</div>
+
+<div id="page-expense" class="page">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">経費明細</div>
+        <div class="header-sub" id="expense-sub">—</div>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:14px;">
+    <div class="section-title" style="margin-bottom:10px;">今月の経費内訳</div>
+    <div class="expense-list" id="expense-list"></div>
+  </div>
+</div>
+
+<div id="page-trend" class="page">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">年間推移</div>
+        <div class="header-sub" id="trend-sub">—</div>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:14px;">
+    <div class="summary-box">
+      <div class="summary-label">年間損益</div>
+      <div class="summary-value" id="summary-profit">—</div>
+      <div class="summary-sub" id="summary-sub">—</div>
+      <div class="summary-row">
+        <div class="summary-col"><div class="summary-col-label">年間売上</div><div class="summary-col-val" id="summary-sales">—</div></div>
+        <div class="summary-col"><div class="summary-col-label">年間経費</div><div class="summary-col-val" id="summary-expense">—</div></div>
+        <div class="summary-col"><div class="summary-col-label">利益率</div><div class="summary-col-val" id="summary-rate">—</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="margin-top:16px;padding-bottom:16px;">
+    <div class="section-title" style="margin-bottom:10px;">月別損益一覧</div>
+    <div class="trend-table">
+      <div class="trend-row header">
+        <div class="trend-month header-col">月</div>
+        <div class="trend-sales header-col" style="text-align:right;">売上</div>
+        <div class="trend-expense header-col" style="text-align:right;">経費</div>
+        <div class="trend-profit header-col">損益</div>
+      </div>
+      <div id="trend-rows"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('sales',this)">
+    <i class="ti ti-chart-bar"></i><span class="nav-label">売上</span>
+  </button>
+  <button class="nav-item" onclick="showPage('expense',this)">
+    <i class="ti ti-receipt"></i><span class="nav-label">経費</span>
+  </button>
+  <button class="nav-item" onclick="showPage('trend',this)">
+    <i class="ti ti-trending-up"></i><span class="nav-label">推移</span>
+  </button>
+</nav>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+let currentYear=new Date().getFullYear();
+let currentMonth=new Date().getMonth()+1;
+let chartMode='current';
+let salesData={};
+let expenseData={};
+let prevSalesData={};
+
+const EXPENSE_ITEMS=['家賃','人件費','光熱費','通信費','広告費','雑費','パーソナル人件費','駐車場','YouTube'];
+
+function fmt(n){
+  if(n===null||n===undefined)return'—';
+  return'¥'+Math.round(n).toLocaleString('ja-JP');
+}
+
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function changeYear(d){
+  const ny=currentYear+d;
+  if(ny>new Date().getFullYear())return;
+  currentYear=ny;
+  document.getElementById('year-label').textContent=currentYear+'年';
+  loadData();
+}
+
+async function loadData(){
+  document.getElementById('loading').style.display='flex';
+  try{
+    const [r1,r2]=await Promise.all([
+      fetch(GAS_URL+'?action=getMonthlyRepaymentData&year='+currentYear+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'}),
+      fetch(GAS_URL+'?action=getMonthlyRepaymentData&year='+(currentYear-1)+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'})
+    ]);
+    const j1=await r1.json();
+    const j2=await r2.json();
+    if(j1&&j1.ok)salesData=j1.monthly||{};
+    if(j2&&j2.ok)prevSalesData=j2.monthly||{};
+
+    await loadExpenseData();
+    renderAll();
+  }catch(e){
+    showToast('データ取得に失敗しました');
+    renderAll();
+  }finally{
+    document.getElementById('loading').style.display='none';
+  }
+}
+
+async function loadExpenseData(){
+  expenseData={1:8000,2:8000,3:4000,4:328000,5:324000,6:333000,7:285000,8:285000,9:285000,10:285000,11:285000,12:285000};
+}
+
+function renderAll(){
+  renderKPI();renderChart();renderBreakdown();renderExpense();renderTrend();
+}
+
+function renderKPI(){
+  const ms=salesData[currentMonth]||0;
+  const pms=salesData[currentMonth-1]||0;
+  const me=expenseData[currentMonth]||0;
+  const mp=ms-me;
+  const pr=ms>0?Math.round(mp/ms*100):0;
+  let ys=0,pys=0;
+  for(let m=1;m<=12;m++){ys+=salesData[m]||0;pys+=prevSalesData[m]||0;}
+
+  document.getElementById('kpi-month-sales').textContent=fmt(ms);
+  document.getElementById('kpi-year-sales').textContent=fmt(ys);
+  document.getElementById('kpi-month-expense').textContent=fmt(me);
+  document.getElementById('kpi-month-profit').textContent=fmt(mp);
+
+  const md=pms>0?Math.round((ms-pms)/pms*100):null;
+  const mel=document.getElementById('kpi-month-diff');
+  if(md!==null){mel.textContent=(md>=0?'▲':'▼')+' 前月比 '+(md>=0?'+':'')+md+'%';mel.className='kpi-diff '+(md>=0?'up':'down');}
+  else{mel.textContent='—';mel.className='kpi-diff neutral';}
+
+  const yd=pys>0?Math.round((ys-pys)/pys*100):null;
+  const yel=document.getElementById('kpi-year-diff');
+  if(yd!==null){yel.textContent=(yd>=0?'▲':'▼')+' 前年比 '+(yd>=0?'+':'')+yd+'%';yel.className='kpi-diff '+(yd>=0?'up':'down');}
+  else{yel.textContent='前年データなし';yel.className='kpi-diff neutral';}
+
+  document.getElementById('kpi-profit-rate').textContent='利益率 '+pr+'%';
+  document.getElementById('kpi-profit-rate').className='kpi-diff '+(mp>=0?'up':'down');
+}
+
+function renderChart(){
+  const vals=Object.values(salesData);
+  const pvals=Object.values(prevSalesData);
+  const maxV=Math.max(...vals,...(chartMode==='compare'?pvals:[]),1);
+  const MAX_H=90;
+  let html='';
+  for(let m=1;m<=12;m++){
+    const v=salesData[m]||0;
+    const h=Math.round((v/maxV)*MAX_H);
+    const isNow=m===currentMonth&&currentYear===new Date().getFullYear();
+    html+='<div class="bar-col">';
+    if(chartMode==='compare'){
+      const pv=prevSalesData[m]||0;
+      const ph=Math.round((pv/maxV)*MAX_H);
+      html+='<div style="display:flex;align-items:flex-end;gap:2px;height:'+MAX_H+'px;">';
+      html+='<div class="bar-body current" style="height:'+h+'px;flex:1"></div>';
+      html+='<div class="bar-body prev" style="height:'+ph+'px;flex:1"></div>';
+      html+='</div>';
+    }else{
+      html+='<div class="bar-body current" style="height:'+h+'px;'+(isNow?'outline:2px solid var(--red);outline-offset:1px;':'')+'"></div>';
+    }
+    html+='<div class="bar-month'+(isNow?' now':'')+'">'+m+'</div></div>';
+  }
+  document.getElementById('chart-bars').innerHTML=html;
+  const leg=document.getElementById('chart-legend');
+  leg.innerHTML='<span><span class="legend-dot" style="background:var(--red)"></span><span class="legend-text">'+currentYear+'年</span></span>'+
+    (chartMode==='compare'?'<span><span class="legend-dot" style="background:var(--blue);opacity:0.5"></span><span class="legend-text">'+(currentYear-1)+'年</span></span>':'');
+}
+
+function switchChart(mode){
+  chartMode=mode;
+  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderChart();
+}
+
+function renderBreakdown(){
+  const ms=salesData[currentMonth]||0;
+  const items=[
+    {name:'ボクシング月会費',icon:'ti-trophy',cls:'red',val:Math.round(ms*0.86)},
+    {name:'パーソナル都度',icon:'ti-run',cls:'blue',val:Math.round(ms*0.14)},
+    {name:'オンラインサロン',icon:'ti-world',cls:'gray',val:0},
+  ];
+  document.getElementById('breakdown-list').innerHTML=items.map(it=>`
+    <div class="breakdown-item">
+      <div class="breakdown-icon ${it.cls}"><i class="ti ${it.icon}"></i></div>
+      <div class="breakdown-info">
+        <div class="breakdown-name">${it.name}</div>
+        <div class="breakdown-val">${fmt(it.val)}</div>
+      </div>
+      <div class="breakdown-badge ${it.val>0?'up':'none'}">${it.val>0?'▲ データあり':'— データなし'}</div>
+    </div>`).join('');
+}
+
+function renderExpense(){
+  document.getElementById('expense-sub').textContent=currentYear+'年 '+currentMonth+'月';
+  const items=[
+    {name:'家賃',val:75000},{name:'人件費（稲田）',val:150000},
+    {name:'光熱費',val:30000},{name:'通信費',val:5000},
+    {name:'パーソナル人件費',val:14000},{name:'駐車場',val:20000},{name:'YouTube',val:30000},
+  ];
+  document.getElementById('expense-list').innerHTML=items.map(it=>`
+    <div class="expense-item">
+      <span class="expense-name">${it.name}</span>
+      <span class="expense-val">${fmt(it.val)}</span>
+    </div>`).join('');
+}
+
+function renderTrend(){
+  let ts=0,te=0;
+  for(let m=1;m<=12;m++){ts+=salesData[m]||0;te+=expenseData[m]||0;}
+  const tp=ts-te;
+  const pr=ts>0?Math.round(tp/ts*100):0;
+  document.getElementById('trend-sub').textContent=currentYear+'年';
+  document.getElementById('summary-profit').textContent=fmt(tp);
+  document.getElementById('summary-sub').textContent='利益率 '+pr+'%';
+  document.getElementById('summary-sales').textContent=fmt(ts);
+  document.getElementById('summary-expense').textContent=fmt(te);
+  document.getElementById('summary-rate').textContent=pr+'%';
+
+  let html='';
+  for(let m=1;m<=12;m++){
+    const s=salesData[m]||0;
+    const e=expenseData[m]||0;
+    const p=s-e;
+    const isNow=m===currentMonth&&currentYear===new Date().getFullYear();
+    html+=`<div class="trend-row" style="${isNow?'background:#fdf5f5;':''}">
+      <div class="trend-month" style="${isNow?'color:var(--red);':''}">${m}月</div>
+      <div class="trend-sales">${s>0?fmt(s):'—'}</div>
+      <div class="trend-expense">${e>0?fmt(e):'—'}</div>
+      <div class="trend-profit ${p>0?'pos':p<0?'neg':''}">${s>0||e>0?fmt(p):'—'}</div>
+    </div>`;
+  }
+  document.getElementById('trend-rows').innerHTML=html;
+}
+
+loadData();
+</script>
+</body>
+</html>
