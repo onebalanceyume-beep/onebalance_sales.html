@@ -17,15 +17,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-:root{
-  --red:#DB444C;--red-light:#fdecea;--red-dark:#b8383f;
-  --blue:#5BB9CD;--blue-light:#e3f5fb;
-  --bg:#f5f5f7;--card:#fff;
-  --text:#1a1a1a;--text2:#666;--text3:#aaa;
-  --border:#e8e8e8;
-  --safe-top:env(safe-area-inset-top);
-  --safe-bottom:env(safe-area-inset-bottom);
-}
+:root{--red:#DB444C;--red-light:#fdecea;--red-dark:#b8383f;--blue:#5BB9CD;--blue-light:#e3f5fb;--bg:#f5f5f7;--card:#fff;--text:#1a1a1a;--text2:#666;--text3:#aaa;--border:#e8e8e8;--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);}
 html,body{touch-action:pan-x pan-y;overscroll-behavior:none;}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:calc(80px + var(--safe-bottom));}
 .page{display:none;}.page.active{display:block;}
@@ -66,8 +58,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .breakdown-item{background:#fff;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px;border:0.5px solid var(--border);}
 .breakdown-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .breakdown-icon.red{background:var(--red-light);}.breakdown-icon.blue{background:var(--blue-light);}.breakdown-icon.gray{background:#f0f0f0;}
+.breakdown-icon.yt{background:var(--red-light);}
 .breakdown-icon i{font-size:20px;}
-.breakdown-icon.red i{color:var(--red);}.breakdown-icon.blue i{color:var(--blue);}.breakdown-icon.gray i{color:var(--text3);}
+.breakdown-icon.red i{color:var(--red);}.breakdown-icon.blue i{color:var(--blue);}.breakdown-icon.gray i{color:var(--text3);}.breakdown-icon.yt i{color:var(--red);}
 .breakdown-info{flex:1;min-width:0;}
 .breakdown-name{font-size:11px;color:var(--text2);margin-bottom:3px;font-weight:500;}
 .breakdown-val{font-size:16px;font-weight:900;color:var(--text);}
@@ -100,8 +93,27 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 @keyframes spin{to{transform:rotate(360deg);}}
 .toast{position:fixed;bottom:calc(90px + var(--safe-bottom));left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:24px;font-size:12px;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
 .toast.show{opacity:1;}
-.empty-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:12px;}
+.toast.success{background:#2e7d32;}
 .update-time{font-size:10px;color:var(--text3);text-align:center;margin-top:8px;padding-bottom:4px;}
+.input-label{font-size:12px;color:var(--text2);font-weight:700;margin-bottom:9px;}
+.month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.month-btn{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:13px 0;text-align:center;font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;transition:all 0.15s;}
+.month-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+.input-card{background:#fff;border-radius:14px;padding:16px;border:0.5px solid var(--border);margin-bottom:12px;}
+.input-card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.input-card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.input-card-icon.salon{background:#f0f0f0;}.input-card-icon.salon i{color:var(--text2);font-size:20px;}
+.input-card-icon.yt{background:var(--red-light);}.input-card-icon.yt i{color:var(--red);font-size:20px;}
+.input-card-name{font-size:14px;font-weight:700;}
+.input-card-now{font-size:11px;color:var(--text3);margin-top:1px;}
+.input-wrap{display:flex;align-items:center;background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;}
+.input-wrap .yen{font-size:22px;color:var(--red);font-weight:700;margin-right:6px;}
+.input-wrap input{flex:1;border:none;background:transparent;font-size:24px;font-weight:700;color:var(--text);outline:none;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.input-wrap input::placeholder{color:var(--text3);font-weight:400;}
+.save-btn{width:100%;background:var(--blue);border:none;border-radius:12px;padding:16px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Noto Sans JP',sans-serif;transition:opacity 0.15s;}
+.save-btn:active{opacity:0.85;}
+.save-btn i{font-size:19px;}
+.save-btn:disabled{background:var(--text3);}
 </style>
 </head>
 <body>
@@ -241,6 +253,52 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
+<div id="page-input" class="page">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-title">売上入力</div>
+        <div class="header-sub">サロン・YouTube収益（手動）</div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="input-label">対象の月を選ぶ</div>
+    <div class="month-grid" id="month-grid"></div>
+  </div>
+  <div class="section" style="margin-top:18px;padding-bottom:16px;">
+    <div class="input-card">
+      <div class="input-card-head">
+        <div class="input-card-icon salon"><i class="ti ti-world"></i></div>
+        <div>
+          <div class="input-card-name">オンラインサロン</div>
+          <div class="input-card-now" id="salon-now">現在：—</div>
+        </div>
+      </div>
+      <div class="input-wrap">
+        <span class="yen">¥</span>
+        <input type="number" inputmode="numeric" id="salon-input" placeholder="0">
+      </div>
+    </div>
+    <div class="input-card">
+      <div class="input-card-head">
+        <div class="input-card-icon yt"><i class="ti ti-brand-youtube"></i></div>
+        <div>
+          <div class="input-card-name">YouTube収益</div>
+          <div class="input-card-now" id="yt-now">現在：—</div>
+        </div>
+      </div>
+      <div class="input-wrap">
+        <span class="yen">¥</span>
+        <input type="number" inputmode="numeric" id="yt-input" placeholder="0">
+      </div>
+    </div>
+    <button class="save-btn" id="save-btn" onclick="saveManual()">
+      <i class="ti ti-device-floppy"></i><span id="save-label">この内容で保存</span>
+    </button>
+  </div>
+</div>
+
 <nav class="bottom-nav">
   <button class="nav-item active" onclick="showPage('sales',this)">
     <i class="ti ti-chart-bar"></i><span class="nav-label">売上</span>
@@ -251,30 +309,35 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <button class="nav-item" onclick="showPage('trend',this)">
     <i class="ti ti-trending-up"></i><span class="nav-label">推移</span>
   </button>
+  <button class="nav-item" onclick="showPage('input',this)">
+    <i class="ti ti-pencil-plus"></i><span class="nav-label">入力</span>
+  </button>
 </nav>
 
 <script>
-// ============================================
-// ONE BALANCE 売上管理アプリ
-// GAS: 売上経費管理表
-// ============================================
 const GAS_URL='https://script.google.com/macros/s/AKfycbyDepduBJ5qNk4Ay9amEW1aq2dx1JdNC91ZeSZJojLtYE0FyAMSBDhFrY8-vHf2zjax/exec';
 
 let currentYear=new Date().getFullYear();
 let currentMonth=new Date().getMonth()+1;
+let selectedMonth=new Date().getMonth()+1;
 let chartMode='current';
 let salesData={},expensesData={},profitsData={};
-let boxingData={},personalData={},salonData={};
+let boxingData={},personalData={},salonData={},youtubeData={};
 let prevSalesData={},prevExpensesData={};
 
 function fmt(n){
   if(n===null||n===undefined||isNaN(n))return'¥0';
   return'¥'+Math.round(n).toLocaleString('ja-JP');
 }
+function fmtNow(n){
+  if(n===null||n===undefined||isNaN(n)||n===0)return'—';
+  return'¥'+Math.round(n).toLocaleString('ja-JP');
+}
 
-function showToast(msg){
+function showToast(msg,ok){
   const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
+  el.textContent=msg;
+  el.className='toast show'+(ok?' success':'');
   setTimeout(()=>el.classList.remove('show'),2200);
 }
 
@@ -305,9 +368,10 @@ async function loadData(showRefreshIcon){
   if(showRefreshIcon)document.getElementById('refresh-btn').classList.add('spinning');
   try{
     const t=Date.now();
-    const [j1,j2]=await Promise.all([
+    const [j1,j2,j3]=await Promise.all([
       fetchJSON(GAS_URL+'?action=getMonthlyDashboardData&year='+currentYear+'&t='+t),
-      fetchJSON(GAS_URL+'?action=getMonthlyDashboardData&year='+(currentYear-1)+'&t='+t)
+      fetchJSON(GAS_URL+'?action=getMonthlyDashboardData&year='+(currentYear-1)+'&t='+t),
+      fetchJSON(GAS_URL+'?action=getManualSalesData&year='+currentYear+'&t='+t)
     ]);
     if(j1&&j1.success){
       salesData=j1.sales||{};
@@ -326,6 +390,12 @@ async function loadData(showRefreshIcon){
     }else{
       prevSalesData={};prevExpensesData={};
     }
+    if(j3&&j3.success){
+      salonData=j3.salon||salonData;
+      youtubeData=j3.youtube||{};
+    }else{
+      youtubeData={};
+    }
     renderAll();
     if(showRefreshIcon)showToast('データを更新しました');
   }catch(e){
@@ -339,6 +409,7 @@ async function loadData(showRefreshIcon){
 
 function renderAll(){
   renderKPI();renderChart();renderBreakdown();renderExpense();renderTrend();renderUpdateTime();
+  renderMonths();fillInputs();
 }
 
 function renderUpdateTime(){
@@ -426,10 +497,12 @@ function renderBreakdown(){
   const b=boxingData[currentMonth]||0;
   const p=personalData[currentMonth]||0;
   const s=salonData[currentMonth]||0;
+  const y=youtubeData[currentMonth]||0;
   const items=[
     {name:'ボクシング月会費',icon:'ti-trophy',cls:'red',val:b},
     {name:'パーソナル都度',icon:'ti-run',cls:'blue',val:p},
     {name:'オンラインサロン',icon:'ti-world',cls:'gray',val:s},
+    {name:'YouTube収益',icon:'ti-brand-youtube',cls:'yt',val:y},
   ];
   document.getElementById('breakdown-list').innerHTML=items.map(it=>{
     const ratio=ms>0?Math.round(it.val/ms*100):0;
@@ -501,19 +574,69 @@ function renderTrend(){
   document.getElementById('trend-rows').innerHTML=html;
 }
 
-// キャッシュ消去（PWA対策）
+function renderMonths(){
+  let html='';
+  for(let m=1;m<=12;m++){
+    html+='<button class="month-btn'+(m===selectedMonth?' active':'')+'" onclick="selectMonth('+m+')">'+m+'月</button>';
+  }
+  document.getElementById('month-grid').innerHTML=html;
+}
+
+function selectMonth(m){
+  selectedMonth=m;
+  renderMonths();
+  fillInputs();
+}
+
+function fillInputs(){
+  const s=salonData[selectedMonth]||0;
+  const y=youtubeData[selectedMonth]||0;
+  document.getElementById('salon-input').value=s>0?s:'';
+  document.getElementById('yt-input').value=y>0?y:'';
+  document.getElementById('salon-now').textContent='現在：'+fmtNow(s);
+  document.getElementById('yt-now').textContent='現在：'+fmtNow(y);
+}
+
+async function saveManual(){
+  const salonVal=document.getElementById('salon-input').value;
+  const ytVal=document.getElementById('yt-input').value;
+  const btn=document.getElementById('save-btn');
+  const lbl=document.getElementById('save-label');
+  btn.disabled=true;lbl.textContent='保存中...';
+  try{
+    const url=GAS_URL+'?action=addManualSales'+
+      '&year='+currentYear+
+      '&month='+selectedMonth+
+      '&salon='+encodeURIComponent(salonVal===''?'':salonVal)+
+      '&youtube='+encodeURIComponent(ytVal===''?'':ytVal)+
+      '&t='+Date.now();
+    const j=await fetchJSON(url);
+    if(j&&j.success){
+      salonData[selectedMonth]=Number(salonVal)||0;
+      youtubeData[selectedMonth]=Number(ytVal)||0;
+      fillInputs();
+      showToast('✓ '+selectedMonth+'月を保存しました',true);
+      loadData();
+    }else{
+      showToast('保存に失敗：'+(j.message||'不明'));
+    }
+  }catch(e){
+    showToast('保存に失敗しました');
+    console.error(e);
+  }finally{
+    btn.disabled=false;lbl.textContent='この内容で保存';
+  }
+}
+
 if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
 }
 if('caches' in window){
   caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
 }
-
-// ズーム時のレイアウト崩れ防止
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 
-// 初期化
 document.getElementById('year-label').textContent=currentYear+'年';
 loadData();
 </script>
