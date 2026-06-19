@@ -353,6 +353,11 @@ function showToast(msg,ok){
   setTimeout(()=>el.classList.remove('show'),2200);
 }
 
+function setLoadingText(t){
+  const el=document.querySelector('#loading .loading-text');
+  if(el)el.textContent=t;
+}
+
 function showPage(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
@@ -394,9 +399,20 @@ async function fetchJSON(url){
   return await res.json();
 }
 
-async function loadData(showRefreshIcon){
+async function loadData(doRecalc){
   document.getElementById('loading').style.display='flex';
-  if(showRefreshIcon)document.getElementById('refresh-btn').classList.add('spinning');
+  if(doRecalc){
+    const rb=document.getElementById('refresh-btn');
+    if(rb)rb.classList.add('spinning');
+    // ① 先にスプレッドシート側の全件集計を走らせる（ボクシング月会費・パーソナル・人件費）
+    setLoadingText('最新データを集計中...（10〜30秒）');
+    try{
+      await fetchJSON(GAS_URL+'?action=updateAll&t='+Date.now());
+    }catch(e){console.error('全件集計に失敗',e);}
+    setLoadingText('集計結果を読み込み中...');
+  }else{
+    setLoadingText('データを取得中...');
+  }
   try{
     const t=Date.now();
     const [j1,j2,j3]=await Promise.all([
@@ -428,13 +444,14 @@ async function loadData(showRefreshIcon){
       youtubeData={};
     }
     renderAll();
-    if(showRefreshIcon)showToast('データを更新しました');
+    if(doRecalc)showToast('最新データに更新しました',true);
   }catch(e){
     showToast('データ取得に失敗しました');
     console.error(e);
   }finally{
     document.getElementById('loading').style.display='none';
-    document.getElementById('refresh-btn').classList.remove('spinning');
+    const rb=document.getElementById('refresh-btn');
+    if(rb)rb.classList.remove('spinning');
   }
 }
 
