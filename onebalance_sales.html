@@ -11,8 +11,8 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>ONE BALANCE 売上管理</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23DB444C'/%3E%3Ctext x='90' y='80' font-size='52' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EONE%3C/text%3E%3Ctext x='90' y='135' font-size='42' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EBALANCE%3C/text%3E%3C/svg%3E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23DB444C'/%3E%3Ctext x='90' y='115' font-size='90' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3E¥%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23ffffff'/%3E%3Ccircle cx='90' cy='90' r='74' fill='%23FFB5BA'/%3E%3Ccircle cx='90' cy='90' r='60' fill='%23FFD9A8'/%3E%3Ccircle cx='90' cy='90' r='46' fill='%23B5EAD7'/%3E%3Ccircle cx='90' cy='90' r='32' fill='%23A6DCEF'/%3E%3Ccircle cx='90' cy='90' r='16' fill='%23C9A8E9'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23ffffff'/%3E%3Ccircle cx='90' cy='90' r='74' fill='%23FFB5BA'/%3E%3Ccircle cx='90' cy='90' r='60' fill='%23FFD9A8'/%3E%3Ccircle cx='90' cy='90' r='46' fill='%23B5EAD7'/%3E%3Ccircle cx='90' cy='90' r='32' fill='%23A6DCEF'/%3E%3Ccircle cx='90' cy='90' r='16' fill='%23C9A8E9'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
@@ -55,9 +55,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .bar-body.current{background:var(--red);}.bar-body.prev{background:var(--blue);opacity:0.55;}
 .bar-body.selected{outline:2px solid var(--red);outline-offset:1px;}
 .bar-month{font-size:9px;color:var(--text3);font-weight:600;}.bar-month.now{color:var(--red);font-weight:900;}.bar-month.sel{color:var(--red);font-weight:900;}
-.chart-legend{display:flex;gap:14px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border);}
+.chart-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border);}
 .legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
 .legend-text{font-size:10px;color:var(--text2);font-weight:500;}
+.toggle-btn{font-size:10px;padding:5px 9px;border-radius:6px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;transition:all 0.2s;}
 .chart-hint{font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-weight:500;}
 .breakdown-list{display:flex;flex-direction:column;gap:8px;}
 .breakdown-item{background:#fff;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px;border:0.5px solid var(--border);}
@@ -191,7 +192,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
     <div class="section-header">
       <div class="section-title">月別売上グラフ</div>
       <div class="toggle-wrap">
-        <button class="toggle-btn active" id="toggle-current" onclick="switchChart('current',this)">今年</button>
+        <button class="toggle-btn active" id="toggle-current" onclick="switchChart('current',this)">合計</button>
+        <button class="toggle-btn" id="toggle-stack" onclick="switchChart('stack',this)">内訳</button>
         <button class="toggle-btn" id="toggle-compare" onclick="switchChart('compare',this)">前年比</button>
       </div>
     </div>
@@ -541,11 +543,44 @@ function renderKPI(){
 }
 
 function renderChart(){
+  const MAX_H=100;
+  let html='';
+
+  if(chartMode==='stack'){
+    const segs=[
+      {data:boxingData,color:'#DB444C',label:'ボクシング'},
+      {data:personalData,color:'#5BB9CD',label:'パーソナル'},
+      {data:salonData,color:'#FBC02D',label:'サロン'},
+      {data:youtubeData,color:'#B39DDB',label:'YouTube'}
+    ];
+    let maxV=1;
+    for(let m=1;m<=12;m++){
+      const sum=(boxingData[m]||0)+(personalData[m]||0)+(salonData[m]||0)+(youtubeData[m]||0);
+      if(sum>maxV)maxV=sum;
+    }
+    for(let m=1;m<=12;m++){
+      const isReal=m===REAL_MONTH&&viewYear===REAL_YEAR;
+      const isSel=m===viewMonth;
+      html+='<div class="bar-col" onclick="selectBarMonth('+m+')">';
+      html+='<div style="display:flex;flex-direction:column-reverse;align-items:stretch;height:'+MAX_H+'px;width:100%;border-radius:4px 4px 0 0;overflow:hidden;'+(isSel?'outline:2px solid var(--red);outline-offset:2px;':'')+'">';
+      segs.forEach(s=>{
+        const v=s.data[m]||0;
+        const h=Math.round((v/maxV)*MAX_H);
+        if(h>0)html+='<div style="height:'+h+'px;width:100%;background:'+s.color+';"></div>';
+      });
+      html+='</div>';
+      html+='<div class="bar-month'+(isSel?' sel':(isReal?' now':''))+'">'+m+'</div></div>';
+    }
+    document.getElementById('chart-bars').innerHTML=html;
+    document.getElementById('chart-legend').innerHTML=segs.map(s=>
+      '<span><span class="legend-dot" style="background:'+s.color+'"></span><span class="legend-text">'+s.label+'</span></span>'
+    ).join('');
+    return;
+  }
+
   const vals=Object.values(salesData);
   const pvals=Object.values(prevSalesData);
   const maxV=Math.max(...vals,...(chartMode==='compare'?pvals:[]),1);
-  const MAX_H=100;
-  let html='';
   for(let m=1;m<=12;m++){
     const v=salesData[m]||0;
     const h=Math.round((v/maxV)*MAX_H);
